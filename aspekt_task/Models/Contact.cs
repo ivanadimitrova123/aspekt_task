@@ -11,6 +11,7 @@ public class Contact
     public string ContactName { get; set; }
     [ForeignKey("Company")]
     public int CompanyId { get; set; }
-    [ForeignKey("Country")]
+    [ForeignKey("Country")] 
     public int CountryId { get; set; }
+
 }   

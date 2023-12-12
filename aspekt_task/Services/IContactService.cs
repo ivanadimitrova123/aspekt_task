@@ -7,6 +7,7 @@ public interface IContactService
 
     List<Contact> GetAllContacts();
     int CreateContact(Contact contact);
-   // Company UpdateContact(Contact contact);
+   Company UpdateContact(Contact contact);
+   //Contact UpdateContact(Contact contact);
     void DeleteContact(int contactId);
 }

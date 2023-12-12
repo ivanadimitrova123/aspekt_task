@@ -43,25 +43,21 @@ public class ContactController : ControllerBase
         var contactId = _contactService.CreateContact(contact);
         return CreatedAtAction(nameof(GetContactById), new { contactId }, contactId);
     }
-    //TODO
-    /*
-        [HttpPut("{contactId}")]
-        public ActionResult<Contact> UpdateContact(int contactId, [FromBody] Contact contact)
-        {
-            if (contactId != contact.ContactId)
-            {
-                return BadRequest("Contact Id in the URL does not match the one in the request body.");
-            }
-
-            var updatedContact = _contactService.UpdateContact(contact);
-            if (updatedContact == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(updatedContact);
+    
+    [HttpPut("{contactId}")] 
+    public ActionResult<Contact> UpdateContact(int contactId, [FromBody] Contact contact) 
+    { 
+        if (contactId != contact.ContactId) 
+        { 
+            return BadRequest("Contact Id in the URL does not match the one in the request body.");
         }
-        */
+        var updatedContact = _contactService.UpdateContact(contact); 
+        if (updatedContact == null) 
+        { 
+            return NotFound();
+        }
+        return Ok(updatedContact);
+    }
     
     [HttpDelete("{contactId}")]
     public ActionResult DeleteContact(int contactId)
@@ -82,5 +78,11 @@ public class ContactController : ControllerBase
         {
             return BadRequest($"Error filtering contacts: {ex.Message}");
         }
+    }
+    [HttpGet("GetContactsWithCompanyAndCountry")]
+    public IActionResult GetContactsWithCompanyAndCountry()
+    {
+        var contacts = _contactRepository.GetContactsWithCompanyAndCountry();
+        return Ok(contacts);
     }
 }

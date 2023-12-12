@@ -1,4 +1,5 @@
 ﻿using aspekt_task.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace aspekt_task.Services.impl;
 
@@ -24,11 +25,29 @@ public class ContactService : IContactService
     public int CreateContact(Contact contact)
     { 
         _dbContext.Contacts.Add(contact);
+        
+        if (contact.CompanyId != 0)
+        {
+            var company = _dbContext.Companies.Find(contact.CompanyId);
+            if (company != null)
+            {
+                company.Contacts.Add(contact);
+            }
+        }
+
+        if (contact.CountryId != 0)
+        {
+            var country = _dbContext.Countries.Find(contact.CountryId);
+            if (country != null)
+            {
+                country.Contacts.Add(contact);
+            }
+        }
+
         _dbContext.SaveChanges();
         return contact.ContactId;
     }
-
-   /* public Company UpdateContact(Contact contact)
+    public Company UpdateContact(Contact contact)
     {
         var existingContact = _dbContext.Contacts.FirstOrDefault(c => c.ContactId == contact.ContactId);
 
@@ -38,7 +57,24 @@ public class ContactService : IContactService
             _dbContext.SaveChanges();
         }
 
-        return existingContact?.Company;
+        var companyId = existingContact?.CompanyId ?? 0;
+        var associatedCompany = _dbContext.Companies
+            .FirstOrDefault(c => c.CompanyId == companyId);
+
+        return associatedCompany;
+    }
+    
+   /*public Contact UpdateContact(Contact contact)
+    {
+        var existingContact = _dbContext.Contacts.FirstOrDefault(c => c.ContactId == contact.ContactId);
+
+        if (existingContact != null)
+        {
+            existingContact.ContactName = contact.ContactName;
+            _dbContext.SaveChanges();
+        }
+
+        return existingContact;
     }*/
 
     public void DeleteContact(int contactId)

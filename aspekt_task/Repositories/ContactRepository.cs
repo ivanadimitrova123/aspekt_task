@@ -13,10 +13,41 @@ public class ContactRepository : IContactRepository
         _dbContext = dbContext;
     }
     
-    //TODO
-    public Contact GetContactWithCompanyAndCountry()
+    public List<dynamic> GetContactsWithCompanyAndCountry()
     {
-        throw new NotImplementedException();
+        var contacts  = _dbContext.Contacts
+            .Join(
+                _dbContext.Companies,
+                contact => contact.CompanyId,
+                company => company.CompanyId,
+                (contact, company) => new
+                {
+                    ContactId = contact.ContactId,
+                    ContactName = contact.ContactName,
+                    CompanyId = contact.CompanyId,
+                    CompanyName = company.CompanyName, 
+                    CountryId = contact.CountryId
+                }
+            )
+            .Join(
+                _dbContext.Countries,
+                combined => combined.CountryId,
+                country => country.CountryId,
+                (combined, country) => new
+                {
+                    ContactId = combined.ContactId,
+                    ContactName = combined.ContactName,
+                    CompanyId = combined.CompanyId,
+                    CompanyName = combined.CompanyName,
+                    CountryId = combined.CountryId,
+                    CountryName = country.CountryName 
+                }
+            )
+            .ToList<dynamic>();
+
+
+ 
+        return contacts;
     }
 
     public List<Contact> FilterContact(int countryId, int companyId)

@@ -14,12 +14,15 @@ public class CountryService : ICountryService
 
     public Country GetCountryById(int countryId)
     {
-        return _dbContext.Countries.FirstOrDefault(c => c.CountryId == countryId);
+        return _dbContext.Countries
+            .Where(c => c.CountryId == countryId)
+            .Include(c => c.Contacts)
+            .FirstOrDefault();
     }
 
     public List<Country> GetAllCountries()
     {
-        return _dbContext.Countries.ToList();
+        return _dbContext.Countries.Include(c => c.Contacts).ToList();
     }
 
     public int CreateCountry(Country country)
@@ -28,30 +31,40 @@ public class CountryService : ICountryService
         _dbContext.SaveChanges();
         return country.CountryId;    
     }
-
-    /*public Company UpdateCountry(Country country)
+    
+    public Company UpdateCountry(Country country)
     {
         var existingCountry = _dbContext.Countries
-            .Include(c => c.Contacts)
-            .ThenInclude(contact => contact.Company)
+            .Include(c => c.Contacts)  
             .FirstOrDefault(c => c.CountryId == country.CountryId);
 
         if (existingCountry != null)
         {
             existingCountry.CountryName = country.CountryName;
-
-            // Update the associated Company if needed
-            foreach (var contact in existingCountry.Contacts)
-            {
-                contact.Company.CompanyName = country.Company.CompanyName;
-            }
-
             _dbContext.SaveChanges();
-            return existingCountry.Contacts.FirstOrDefault()?.Company;
+        }
+        
+        var companyId = existingCountry?.Contacts?.FirstOrDefault()?.CompanyId ?? 0;
+        var associatedCompany = _dbContext.Companies
+            .FirstOrDefault(c => c.CompanyId == companyId);
+
+        return associatedCompany;
+    }
+    
+    /*public Country UpdateCountry(Country country)
+    {
+        var existingCountry = _dbContext.Countries
+            .FirstOrDefault(c => c.CountryId == country.CountryId);
+
+        if (existingCountry != null)
+        {
+            existingCountry.CountryName = country.CountryName;
+            _dbContext.SaveChanges();
         }
 
-        return null;  
+        return existingCountry;
     }*/
+
 
     public void DeleteCountry(int countryId)
     {

@@ -41,25 +41,24 @@ public class CountryController : ControllerBase
         var countryId = _countryService.CreateCountry(country);
         return CreatedAtAction(nameof(GetCountryById), new { countryId }, countryId);
     }
-    //TODO
-    /*
-     * [HttpPut("{countryId}")]
-        public ActionResult<Country> UpdateCountry(int countryId, [FromBody] Country country)
-        {
-            if (countryId != country.CountryId)
-            {
-                return BadRequest("Country Id in the URL does not match the one in the request body.");
-            }
-
-            var updatedCountry = _countryService.UpdateCountry(country);
-            if (updatedCountry == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(updatedCountry);
+    
+   
+    [HttpPut("{countryId}")] 
+    public ActionResult<Country> UpdateCountry(int countryId, [FromBody] Country country) 
+    { 
+        if (countryId != country.CountryId) 
+        { 
+            return BadRequest("Country Id in the URL does not match the one in the request body.");
         }
-     */
+        var updatedCountry = _countryService.UpdateCountry(country); 
+        if (updatedCountry == null) 
+        { 
+            return NotFound();
+        }
+        
+        return Ok(updatedCountry);
+    }
+     
 
     [HttpDelete("{countryId}")]
     public ActionResult DeleteCountry(int countryId)

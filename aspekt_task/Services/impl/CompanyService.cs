@@ -1,4 +1,5 @@
 ﻿using aspekt_task.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace aspekt_task.Services.impl;
 
@@ -13,12 +14,15 @@ public class CompanyService : ICompanyService
     
     public Company GetCompanyById(int companyId)
     {
-        return _dbContext.Companies.FirstOrDefault(c => c.CompanyId == companyId);
+        return _dbContext.Companies
+            .Where(c => c.CompanyId == companyId)
+            .Include(c => c.Contacts)
+            .FirstOrDefault();
     }
     
     public List<Company> GetAllCompanies()
     {
-        return _dbContext.Companies.ToList();
+        return _dbContext.Companies.Include(c => c.Contacts).ToList();
     }
 
     public int CreateCompany(Company company)

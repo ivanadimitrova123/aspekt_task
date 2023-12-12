@@ -4,6 +4,6 @@ namespace aspekt_task.Repositories;
 
 public interface IContactRepository 
 {
-    Contact GetContactWithCompanyAndCountry();
+    List<dynamic> GetContactsWithCompanyAndCountry();
     List<Contact> FilterContact(int countryId, int companyId);
 }
