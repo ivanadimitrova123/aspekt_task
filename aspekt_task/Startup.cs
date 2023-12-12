@@ -2,6 +2,10 @@
 using aspekt_task.Services;
 using aspekt_task.Services.impl;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace aspekt_task;
 
@@ -20,6 +24,10 @@ public class Startup
         
             services.AddMvc();
             services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "http://localhost:5018/", Version = "v1" });
+            });
             services.AddRazorPages();
             services.AddControllersWithViews();
             services.AddScoped<ICompanyService, CompanyService>();
@@ -31,6 +39,12 @@ public class Startup
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "http://localhost:5018/");
+            });
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
