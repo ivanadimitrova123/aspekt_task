@@ -47,24 +47,7 @@ public class ContactService : IContactService
         _dbContext.SaveChanges();
         return contact.ContactId;
     }
-    public Company UpdateContact(Contact contact)
-    {
-        var existingContact = _dbContext.Contacts.FirstOrDefault(c => c.ContactId == contact.ContactId);
-
-        if (existingContact != null)
-        {
-            existingContact.ContactName = contact.ContactName;
-            _dbContext.SaveChanges();
-        }
-
-        var companyId = existingContact?.CompanyId ?? 0;
-        var associatedCompany = _dbContext.Companies
-            .FirstOrDefault(c => c.CompanyId == companyId);
-
-        return associatedCompany;
-    }
-    
-   /*public Contact UpdateContact(Contact contact)
+  public Contact UpdateContact(Contact contact)
     {
         var existingContact = _dbContext.Contacts.FirstOrDefault(c => c.ContactId == contact.ContactId);
 
@@ -75,7 +58,7 @@ public class ContactService : IContactService
         }
 
         return existingContact;
-    }*/
+    }
 
     public void DeleteContact(int contactId)
     {

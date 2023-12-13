@@ -32,39 +32,19 @@ public class CountryService : ICountryService
         return country.CountryId;    
     }
     
-    public Company UpdateCountry(Country country)
-    {
+    public Country UpdateCountry(Country country)
+    { 
         var existingCountry = _dbContext.Countries
-            .Include(c => c.Contacts)  
             .FirstOrDefault(c => c.CountryId == country.CountryId);
 
-        if (existingCountry != null)
-        {
-            existingCountry.CountryName = country.CountryName;
+        if (existingCountry != null) 
+        { 
+            existingCountry.CountryName = country.CountryName; 
             _dbContext.SaveChanges();
         }
-        
-        var companyId = existingCountry?.Contacts?.FirstOrDefault()?.CompanyId ?? 0;
-        var associatedCompany = _dbContext.Companies
-            .FirstOrDefault(c => c.CompanyId == companyId);
-
-        return associatedCompany;
-    }
     
-    /*public Country UpdateCountry(Country country)
-    {
-        var existingCountry = _dbContext.Countries
-            .FirstOrDefault(c => c.CountryId == country.CountryId);
-
-        if (existingCountry != null)
-        {
-            existingCountry.CountryName = country.CountryName;
-            _dbContext.SaveChanges();
-        }
-
         return existingCountry;
-    }*/
-
+    }
 
     public void DeleteCountry(int countryId)
     {
